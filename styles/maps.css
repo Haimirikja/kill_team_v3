@@ -4,7 +4,10 @@
     flex-wrap: nowrap;
     gap: 1em;
 }
-#Maps > h2 {
+#Maps > div {
+    margin: 0 2em;
+}
+#Maps h2 {
     padding: 1em;
     text-align: center;
 }
