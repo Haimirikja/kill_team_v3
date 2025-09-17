@@ -1,0 +1,128 @@
+:root{
+    /* --page-bg-color: #3c3c3c; */
+    --font-accent-color: #f15c23;
+    --card-accent-color: #c54c21;
+    --card-bg-color: #191b1c;
+    --font-color-white: #ffffff;
+    --color-security: #0b6be1;
+    --color-seek-destroy: #bd0003;
+    --color-recon: #f05c22;
+    --color-infiltration: #5f5f5f;
+}
+#Actions {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    background: var(--card-bg-color);
+}
+
+#TacOps {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    /* display: grid;
+    gap: 0.5em;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto; */
+}
+.tacop {
+    width: 70mm;
+    min-height: 120mm;
+    font-size: 7.75pt;
+    line-height: 1.33em;
+    border: 1px solid var(--card-accent-color);
+    border-radius: 1em;
+    overflow: hidden;
+    cursor: default;
+}
+.tacop.not-selected{display:none;}
+
+.tacop > header h1 {
+    display: block;
+    font-size: 1.5em;
+    padding: 0.25em 0.5em;
+    text-align: center;
+    background-color: var(--card-bg-color);
+    color: var(--font-color-white);
+}
+.tacop > header h2 {
+    display: block;
+    font-size: 1em;
+    padding: 0.25em 0.5em;
+    text-align: center;
+    background-color: var(--card-accent-color);
+    color: var(--font-color-white);
+}
+.tacop > header h2.recon {background-color: var(--color-recon);}
+.tacop > header h2.seek-destroy {background-color: var(--color-seek-destroy);}
+.tacop > header h2.infiltration {background-color: var(--color-infiltration);}
+.tacop > header h2.security {background-color: var(--color-security);}
+
+.tacop > div {
+    padding: 1em;
+}
+.tacop > div h3 {
+    color: var(--card-accent-color);
+}
+.tacop > div > div {
+    padding-bottom: 0.5em;
+}
+.tacop .action {
+    border: 1px solid var(--card-accent-color);
+}
+.tacop .action > header {
+    padding: 2px 4px;
+    margin-top: 1px;
+    margin-right: 1px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background-color: var(--card-accent-color);
+    color: var(--font-color-white);
+    font-weight: bold;
+}
+.tacop .action > div {
+    padding: 2px 4px;
+}
+.tacop .action > div > div {
+    position: relative;
+    padding: 2px 0 2px 1.5em;
+    /*line-height: 1em;*/
+}
+.tacop .action .effect::before {
+    content: "";
+    position: absolute;
+    top: calc(0.5em - 1px);
+    left: 0.25em;
+    width: 0;
+    height: 0;
+    border-left: 10px solid green;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+.tacop .action .condition::before {
+    content: "";
+    position: absolute;
+    top: 0.5em;
+    left: 0.25em;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    transform: rotate(45deg);
+}
+@media (max-width:800px) and (orientation: portrait) {
+    #TacOps {
+        flex-direction: column;
+        align-items: center;
+    }
+}

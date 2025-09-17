@@ -1,0 +1,44 @@
+.timeline {
+    margin-left: 2em;
+    padding: 1em 1em 0 2em;
+    border-left: 1px solid var(--accent-background-color);
+    background-color: var(--background);
+}
+.timeline .event {
+    position: relative;
+    margin-bottom: 2em;
+}
+.timeline .event .event-icon {
+    --icon-size: calc(var(--font-size) * 3);
+    content: "";
+    width: var(--icon-size);
+    height: var(--icon-size);
+    position: absolute;
+    top: 0.75em;
+    left: calc(-1 * var(--icon-size) - 0.5em + 1px);
+    border: 1px solid var(--accent-background-color);
+    border-radius: var(--icon-size);
+    background-color: var(--background);
+    color: var(--accent-background-color);
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align: center;
+    line-height: 2em;
+}
+.timeline .event:not(:last-child) .event-icon::after {
+    content: "";
+    position: absolute;
+    top: var(--icon-size);
+    left: 0.5em;
+    transform: rotate(45deg) skew(20deg, 20deg);
+    border-right: calc(0.75 * var(--font-size)) solid var(--accent-background-color);
+    border-bottom: calc(0.75 * var(--font-size)) solid var(--accent-background-color);
+    border-left: calc(0.75 * var(--font-size)) solid transparent;
+    border-top: calc(0.75 * var(--font-size)) solid transparent;
+}
+.timeline .event .event-content {
+    padding: 1em;
+    background-color: var(--content-background);
+    border-radius: var(--font-size);
+    border: 1px solid var(--accent-background-color);
+}

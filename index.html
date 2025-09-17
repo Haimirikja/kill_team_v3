@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Enrico Beccalli" />
+    <meta property="title" content="Kill Team v3" />
+    <meta property="description" content="" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://haimirikja.altervista.org/kill-team-v3/" />
+    <meta property="og:title" content="Kill Team v3" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="images/icons/ktv3-256x256.png" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:url" content="https://haimirikja.altervista.org/kill-team-v3/" />
+    <meta property="twitter:title" content="Kill Team v3" />
+    <meta property="twitter:description" content="" />
+    <meta property="twitter:image" content="images/icons/ktv3-256x256.png" />
+    <title>Kill Team v3</title>
+    <link rel="icon" type="image/png" href="images/icons/ktv3-256x256.png" sizes="256x256" />
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+    <script type="application/javascript" src="scripts/combat-manager.js"></script>
+    <script type="application/javascript" src="scripts/main.js"></script>
+</head>
+<body>
+    <header class="main-bar kt-accent">
+        <a href="index.html"><img src="images/icons/ktv3-inv-256x256.png" alt="Back to Index" /></a>
+        <h1 class="main-title">Kill Team 3</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="game-sequence.html">Game Sequence</a></li>
+            <li><a href="maps.html">Maps</a></li>
+            <li><a href="kill-op.html">Kill Op</a></li>
+            <li><a href="tac-op.html">Tac Op</a></li>
+        </ul>
+    </nav>
+    <div class="combat-manager">
+        <div id="KillOpManager" class="manager">
+            <div class="name">Kill Op</div>
+            <div class="action">
+                <select id="KillTeamSize" class="kt-select kt-accent">
+                    <option value="5">Size 5</option>
+                    <option value="6">Size 6</option>
+                    <option value="7">Size 7</option>
+                    <option value="8">Size 8</option>
+                    <option value="9">Size 9</option>
+                    <option value="10">Size 10</option>
+                    <option value="11">Size 11</option>
+                    <option value="12">Size 12</option>
+                    <option value="13">Size 13</option>
+                    <option value="14">Size 14</option>
+                </select>
+                <div class="counter">
+                    <div id="RemoveKill" class="button-icon">-</div>
+                    <div id="KillScored">0</div>
+                    <div id="AddKill" class="button-icon">+</div>
+                </div>
+            </div>
+            <div class="result">
+                <img id="KillOpVP" src="images/icons/d6-0.png" alt="0" />
+            </div>
+        </div>
+        <div id="CritOpManager" class="manager">
+            <div class="name">Crit Op</div>
+            <div class="action">
+                <div class="counter">
+                    <div id="RemoveCrit" class="button-icon">-</div>
+                    <div id="CritScored">0</div>
+                    <div id="AddCrit" class="button-icon">+</div>
+                </div>
+            </div>
+            <div class="result">
+                <img id="CritOpVP" src="images/icons/d6-0.png" alt="0" />
+            </div>
+        </div>
+        <div id="TacOpManager" class="manager">
+            <div class="name">Tac Op</div>
+            <div class="action">
+                <div class="counter">
+                    <div id="RemoveTac" class="button-icon">-</div>
+                    <div id="TacScored">0</div>
+                    <div id="AddTac" class="button-icon">+</div>
+                </div>
+            </div>
+            <div class="result">
+                <img id="TacOpVP" src="images/icons/d6-0.png" alt="0" />
+            </div>
+        </div>
+        <div>
+            <div id="ResetManager" class="button">Reset</div>
+        </div>
+    </div>
+    
+</body>
+</html>
