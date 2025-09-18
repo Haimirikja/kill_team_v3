@@ -1,65 +1,28 @@
-class TacOp {
-    #archetype = "";
-    #archetypeID = "";
+class CritOp {
     #name = "";
-    #reveal = [];
     #missionAction = null;
     #additionalRules = [];
     #victoryPoints = [];
 
     constructor({
-        archetype = "",
         name = "",
-        reveal = [],
         missionAction = [],
         additionalRules = [],
         victoryPoints = [],
     } = {}) {
-        this.archetype = archetype;
         this.name = name;
-        this.reveal = reveal;
         this.missionAction = missionAction;
         this.additionalRules = additionalRules;
         this.victoryPoints = victoryPoints;
     }
 
-    get archetype() { return this.#archetype; }
-    get archetypeID() { return this.#archetypeID; }
     get name() { return this.#name; }
-    get reveal() { return this.#reveal; }
     get missionAction() { return this.#missionAction; }
     get additionalRules() { return this.#additionalRules; }
     get victoryPoints() { return this.#victoryPoints; }
 
-    set archetype(value) {
-        switch(value.toUpperCase()) {
-            case "SEEK&DESTROY":
-                this.#archetype = "SEEK & DESTROY";
-                this.#archetypeID = "SEEK_DESTROY";
-                break;
-            case "SECURITY":
-                this.#archetype = "SECURITY";
-                this.#archetypeID = "SECURITY";
-                break;
-            case "INFILTRATION":
-                this.#archetype = "INFILTRATION";
-                this.#archetypeID = "INFILTRATION";
-                break;
-            case "RECON":
-                this.#archetype = "RECON";
-                this.#archetypeID = "RECON";
-                break;
-            default:
-                this.#archetype = undefined;
-                this.#archetype = undefined;
-                break;
-        }
-    }
     set name(value) {
         this.#name = typeof value === 'string' ? value : "";
-    }
-    set reveal(rows) {
-        this.#reveal = Array.isArray(rows) ? rows.filter(x => typeof x === 'string') : typeof rows === 'string' ? [rows] : [];
     }
     set missionAction(values) {
         this.#missionAction = Array.isArray(values) ? values.filter(x => x instanceof Action) : values instanceof Action ? [values] : [];
@@ -73,10 +36,8 @@ class TacOp {
 
     static parse = (object) => {
         if (!(object instanceof Object)) return undefined;
-        return new TacOp({
-            archetype: object.archetype,
+        return new CritOp({
             name: object.name,
-            reveal: object.reveal,
             missionAction: object.missionAction?.map(x => Action.parse(x)),
             additionalRules: object.additionalRules,
             victoryPoints: object.victoryPoints,
@@ -86,30 +47,14 @@ class TacOp {
     toHTML = _ => {
         const card = document.createElement("div");
         card.id = this.name.replace(/\s+/gi, "_").toLowerCase();
-        card.classList.add("tacop");
+        card.classList.add("critop");
         card.classList.add("op");
         card.setAttribute("data-archtype", this.archetypeID);
         const header = document.createElement("header");
         const name = document.createElement("h1");
         name.innerText = this.name.toUpperCase();
-        const archetype = document.createElement("h2");
-        archetype.classList.add(this.archetype.toLowerCase().replace(/[^a-z]+/gim, "-"));
-        archetype.innerText = `${this.archetype}`;
-        header.append(name, archetype);
+        header.appendChild(name);
         const description = document.createElement("div");
-        if (this.reveal.length) {
-            const reveal = document.createElement("div");
-            const title = document.createElement("h3");
-            title.innerText = "REVEAL";
-            const text = document.createElement("div");
-            this.reveal.forEach(row => {
-                const line = document.createElement("div");
-                line.innerText = row;
-                text.appendChild(line);
-            });
-            reveal.append(title, text);
-            description.appendChild(reveal);
-        }
         if (this.missionAction.length) {
             const action = document.createElement("div");
             const title = document.createElement("h3");
@@ -236,16 +181,16 @@ class Action {
 }
 
 
-function selectTacOp(tacopId = "") {
-    if (![...document.querySelectorAll(".tacop.selected")].length) {
+function selectCritOp(critopId = "") {
+    if (![...document.querySelectorAll(".critop.selected")].length) {
         let found = false;
-        [...document.querySelectorAll(".tacop")].forEach(element => {
-            if (element.id === tacopId) found = true;
-            element.classList.toggle("not-selected", !(element.id === tacopId));
-            element.classList.toggle("selected", element.id === tacopId);
+        [...document.querySelectorAll(".critop")].forEach(element => {
+            if (element.id === critopId) found = true;
+            element.classList.toggle("not-selected", !(element.id === critopId));
+            element.classList.toggle("selected", element.id === critopId);
         });
         if (found) {
-            saveTacOp(tacopId);
+            saveCritOp(critopId);
             createResetButton();
         }
     }
@@ -256,53 +201,53 @@ function createResetButton() {
     resetButton.id = "ResetButton";
     resetButton.classList.add("button");
     resetButton.innerText = "Reset";
-    resetButton.addEventListener('click', _ => resetTacOp());
+    resetButton.addEventListener('click', _ => resetCritOp());
     document.getElementById("Actions").innerHTML = null;
     document.getElementById("Actions").appendChild(resetButton);
 }
 
-function saveTacOp(id = "") {
+function saveCritOp(id = "") {
     if (!localStorage) return;
-    localStorage.setItem("kt-v3/tacop", id);
+    localStorage.setItem("kt-v3/critop", id);
 }
-function loadTacOp() {
+function loadCritOp() {
     if (!localStorage) return;
-    const tacopId = localStorage.getItem("kt-v3/tacop");
-    if (tacopId) selectTacOp(tacopId);
+    const critopId = localStorage.getItem("kt-v3/critop");
+    if (critopId) selectCritOp(critopId);
 }
-function resetTacOp() {
-    [...document.querySelectorAll(".tacop")].forEach(element => {
+function resetCritOp() {
+    [...document.querySelectorAll(".critop")].forEach(element => {
         element.classList.remove("not-selected");
         element.classList.remove("selected");
     });
     if (!localStorage) return;
-    localStorage.removeItem("kt-v3/tacop");
+    localStorage.removeItem("kt-v3/critop");
     document.getElementById("Actions").innerHTML = null;
 }
 
 window.onload = _ => {
 
     if (!location.host) {
-    	TACOPS.forEach(tacop => {
-            const opElement = TacOp.parse(tacop).toHTML();
-            opElement.addEventListener('click', (e) => selectTacOp(e.currentTarget.id));
-            document.getElementById("TacOps")?.appendChild(opElement);
+    	CRITOPS.forEach(critop => {
+            const opElement = CritOp.parse(critop).toHTML();
+            opElement.addEventListener('click', (e) => selectCritOp(e.currentTarget.id));
+            document.getElementById("CritOps")?.appendChild(opElement);
         });
-        loadTacOp();
+        loadCritOp();
     } else {
-    	fetch("data/tac-ops-3.1.json")
+    	fetch("data/crit-ops-3.1.json")
         .then(response => {
             if (!response.ok) throw new Error(response.status);
             return response.json();
         })
-        .then(TACOPS => {
-            TACOPS.forEach(tacop => {
-                const op = TacOp.parse(tacop);
+        .then(CRITOPS => {
+            CRITOPS.forEach(critop => {
+                const op = CritOp.parse(critop);
                 const opElement = op.toHTML();
-                opElement.addEventListener('click', (e) => selectTacOp(e.currentTarget.id));
-                document.getElementById("TacOps")?.appendChild(opElement);
+                opElement.addEventListener('click', (e) => selectCritOp(e.currentTarget.id));
+                document.getElementById("CritOps")?.appendChild(opElement);
             });
-            loadTacOp();
+            loadCritOp();
             }
         );
     }
