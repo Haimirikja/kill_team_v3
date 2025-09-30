@@ -57,10 +57,26 @@
         "reveal": [
             "When you perform the Plant Banner action."
         ],
+        "missionAction": [
+            {
+                "name": "Plant Banner",
+                "cost": 1,
+                "effects": [
+                    [
+                        "Place your Banner mission marker within the active operative's control range, wholly within your opponent's territory and more than 5\" from a neutral killzone edge.",
+                        "Operatives can perform the Pick Up Marker action on your Banner mission marker."
+                    ]
+                ],
+                "conditions": [
+                    [
+                        "An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if a friendly operative has already performed this action during the battle."
+                    ]
+                ]
+            }
+        ],
         "victoryPoints": [
-            "At the end of each turning point after the first:",
-            "* If there are no enemy operatives wholly within your territory, you score 1 VP.",
-            "* If there are no enemy operatives wholly within 6\" of your drop zone, you score 1 VP."
+            "At the end of each turning point after the first, if your Banner mission marker is wholly within your opponent's territory and friendly operatives control it, you score 1VP; if that's true and no enemy operatives contest it, you score 2VP instead.",
+            "Note your Banner mission marker must be in the killzone (not being carried) to score."
         ]
     },
     {
