@@ -33,10 +33,12 @@ h1,h2,h3,h4,h5,h6 {margin:0;}
 .button {
     display: inline-block;
     padding: 0.5em 1em;
-    background-color: #f4f4f4;
-    border-radius: 0.5em;
-    border: 1px solid #767676;
+    background-color: var(--content-background);
+    border-radius: 2em;
+    border: 2px solid var(--accent-background-color);
+    color: var(--accent-background-color);
     cursor: pointer;
+    user-select: none;
 }
 .button-icon {
     display: inline-block;
@@ -134,6 +136,7 @@ nav ul li a::before {
 }
 
 .combat-manager {
+    padding: 0 3em;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -141,6 +144,7 @@ nav ul li a::before {
     gap: 1em;
 }
 .combat-manager .manager {
+    width: 100%;
     padding: 1em;
     border: 1px solid var(--font-color);
     display: flex;
@@ -152,8 +156,13 @@ nav ul li a::before {
 }
 .combat-manager .manager select {width: 100%;}
 .combat-manager .result {
-    text-align: center;
-    line-height: 2em;
+    /* text-align: center;
+    line-height: 2em; */
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
 }
 .combat-manager .result img {display: block; max-width: 2em;}
 .counter {

@@ -5,6 +5,16 @@ class CombatManager {
         if (document.getElementById("KillOpManager")) this.#managers.push(new KillOpManager());
         if (document.getElementById("CritOpManager")) this.#managers.push(new CritOpManager());
         if (document.getElementById("TacOpManager")) this.#managers.push(new TacOpManager());
+        const primaryButtons = [...document.querySelectorAll(".primarySet")];
+        primaryButtons.forEach(button => {
+            button.addEventListener('click', _ => {
+                const name = button.getAttribute("for");
+                this.#managers.forEach(manager => {
+                    manager.primary = manager.name.toLowerCase() === name.toLowerCase() && !manager.primary;
+                    manager.update();
+                });
+            });
+        });
         const reset = document.getElementById("ResetManager");
         if (reset) reset.addEventListener('click', _ => {
             this.#managers.forEach(manager => {
@@ -17,18 +27,28 @@ class CombatManager {
 class OpManager {
     #name = "";
     #scored = 0;
+    #primary = false;
+    #mainElement = "";
     #scoredElement = null;
     #vpElement = null;
+    #primaryElement = null;
 
     constructor({
         scored = 0,
         name = "",
+        primary = false,
     } = {}) {
         this.name = name;
         if (!this.name) return undefined;
         this.scored = scored ? scored : this.load();
+        this.primary = typeof primary === 'boolean' ? primary : false;
+        this.#mainElement = document.getElementById(`${this.name}OpManager`);
         this.#scoredElement = document.getElementById(`${this.name}Scored`);
         this.#vpElement = document.getElementById(`${this.name}OpVP`);
+        this.#primaryElement = document.createElement("img");
+        this.#primaryElement.id = `primary${this.name}`;
+        this.#primaryElement.src = "images/icons/d6-0.png";
+        this.#primaryElement.alt = 0;
         const addElement = document.getElementById(`Add${this.name}`);
         const removeElement = document.getElementById(`Remove${this.name}`);
         if (addElement) addElement.addEventListener('click', _ => { this.add(); });
@@ -37,11 +57,15 @@ class OpManager {
     }
     get name() { return this.#name; }
     get scored() { return this.#scored; }
+    get primary() { return this.#primary; }
     get vp() { return this.calculateVP(); }
+    get mainElement() { return this.#mainElement; }
     get scoredElement() { return this.#scoredElement; }
     get vpElement() { return this.#vpElement; }
+    get primaryElement() { return this.#primaryElement; }
     set name(value) { this.#name = typeof value === 'string' ? value : undefined; }
     set scored(value) { this.#scored = typeof value === 'number' && isFinite(value) && value > 0 ? parseInt(value) : 0; }
+    set primary(value) { this.#primary = typeof value === 'boolean' ? value : false; }
 
     calculateVP = _ => {
         return this.scored;
@@ -55,6 +79,27 @@ class OpManager {
         this.update();
     }
     update = (save = true) => {
+        if (this.primary) {
+            if (!document.getElementById(this.primaryElement.id)) this.mainElement.querySelector(".result")?.appendChild(this.primaryElement);
+            switch(Math.ceil(this.vp / 2.0)) {
+                case 1:
+                    this.primaryElement.src = "images/icons/d6-1.png";
+                    this.primaryElement.alt = 1;
+                    break;
+                case 2:
+                    this.primaryElement.src = "images/icons/d6-2.png";
+                    this.primaryElement.alt = 2;
+                    break;
+                case 3:
+                    this.primaryElement.src = "images/icons/d6-3.png";
+                    this.primaryElement.alt = 3;
+                    break;
+                default:
+                    this.primaryElement.src = "images/icons/d6-0.png";
+                    this.primaryElement.alt = 0;
+                    break;
+            }
+        } else this.primaryElement.remove();
         this.scoredElement.innerText = this.scored;
         switch(this.vp) {
             case 1:
@@ -101,8 +146,9 @@ class OpManager {
     reset = _ => {
         if (!localStorage) return false;
         localStorage.removeItem(`kt-v3/combat-manager/${this.name}Op`);
+        this.primary = false;
         this.scored = 0;
-        this.update();
+        this.update(false);
         return true;
     }
 }
@@ -122,13 +168,13 @@ class KillOpManager extends OpManager {
     };
     #size = 0;
     
-    constructor({ kills = 0, size = 0 } = {}) {
+    constructor({ kills = 0, size = 0, primary = false } = {}) {
         super({
             scored: kills,
             name: "Kill",
+            primary: primary,
         });
         const value = this.load();
-        if (!kills) this.scored = value.kills;
         this.size = size ? size : value.size;
         const sizeElement = document.getElementById("KillTeamSize");
         if (sizeElement) {
@@ -161,7 +207,7 @@ class KillOpManager extends OpManager {
     save = _ => {
         try {
             if (!localStorage) throw "Missing localStorage";
-            const value = JSON.stringify({ kills: this.scored, size: this.size });
+            const value = JSON.stringify({ kills: this.scored, size: this.size, primary: this.primary, });
             localStorage.setItem(`kt-v3/combat-manager/${this.name}Op`, value);
             return true;
         } catch(e) {
@@ -177,7 +223,8 @@ class KillOpManager extends OpManager {
             if (!value) return empty;
             const scored = parseInt(value.kills);
             const size = parseInt(value.size);
-            return { kills: scored, size: size };
+            const primary = typeof value.primary === 'boolean' ? value.primary : false;
+            return { kills: scored, size: size, primary: primary, };
         } catch(e) {
             console.error(e);
             return empty;
@@ -185,18 +232,20 @@ class KillOpManager extends OpManager {
     }
 }
 class CritOpManager extends OpManager {
-    constructor({ points = 0 } = {}) {
+    constructor({ points = 0, primary = false, } = {}) {
         super({
             scored: points,
             name: "Crit",
+            primary: primary,
         });
     }
 }
 class TacOpManager extends OpManager {
-    constructor({ points = 0 } = {}) {
+    constructor({ points = 0, primary = false, } = {}) {
         super({
             scored: points,
             name: "Tac",
+            primary: primary,
         });
     }
 }
