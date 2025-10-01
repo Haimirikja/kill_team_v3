@@ -141,7 +141,7 @@ nav ul li a::before {
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 1em;
+    gap: 0.5em;
 }
 .combat-manager .manager {
     width: 100%;
