@@ -40,8 +40,9 @@ class OpManager {
     } = {}) {
         this.name = name;
         if (!this.name) return undefined;
-        this.scored = scored ? scored : this.load();
-        this.primary = typeof primary === 'boolean' ? primary : false;
+        const value = this.load();
+        this.scored = value.scored ?? scored;
+        this.primary = value.primary ?? primary;
         this.#mainElement = document.getElementById(`${this.name}OpManager`);
         this.#scoredElement = document.getElementById(`${this.name}Scored`);
         this.#vpElement = document.getElementById(`${this.name}OpVP`);
@@ -64,7 +65,7 @@ class OpManager {
     get vpElement() { return this.#vpElement; }
     get primaryElement() { return this.#primaryElement; }
     set name(value) { this.#name = typeof value === 'string' ? value : undefined; }
-    set scored(value) { this.#scored = typeof value === 'number' && isFinite(value) && value > 0 ? parseInt(value) : 0; }
+    set scored(value) { this.#scored = !isNaN(value) && isFinite(value) && value > 0 ? parseInt(value) : 0; }
     set primary(value) { this.#primary = typeof value === 'boolean' ? value : false; }
 
     calculateVP = _ => {
@@ -135,13 +136,25 @@ class OpManager {
     }
     save = _ => {
         if (!localStorage) return false;
-        localStorage.setItem(`kt-v3/combat-manager/${this.name}Op`, this.scored);
+        const value = JSON.stringify({
+            scored: this.scored,
+            primary: this.primary,
+        });
+        localStorage.setItem(`kt-v3/combat-manager/${this.name}Op`, value);
         return true;
     }
     load = _ => {
-        if (!localStorage) return 0;
-        const scored = parseInt(localStorage.getItem(`kt-v3/combat-manager/${this.name}Op`));
-        return !isNaN(scored) ? scored : 0;
+        const empty = { scored: this.scored, primary: this.primary, };
+        try{
+            if (!localStorage) return 0;
+            const value = JSON.parse(localStorage.getItem(`kt-v3/combat-manager/${this.name}Op`));
+            const scored = parseInt(value.scored);
+            const primary = typeof value.primary === 'boolean' ? value.primary : false;
+            return { scored: scored, primary: primary, };
+        } catch(e) {
+            console.error(e);
+            return empty;
+        }
     }
     reset = _ => {
         if (!localStorage) return false;
@@ -175,6 +188,8 @@ class KillOpManager extends OpManager {
             primary: primary,
         });
         const value = this.load();
+        this.scored = value.kills ?? this.scored;
+        this.primary = value.primary ?? this.primary;
         this.size = size ? size : value.size;
         const sizeElement = document.getElementById("KillTeamSize");
         if (sizeElement) {
@@ -207,7 +222,11 @@ class KillOpManager extends OpManager {
     save = _ => {
         try {
             if (!localStorage) throw "Missing localStorage";
-            const value = JSON.stringify({ kills: this.scored, size: this.size, primary: this.primary, });
+            const value = JSON.stringify({
+                kills: this.scored,
+                size: this.size,
+                primary: this.primary,
+            });
             localStorage.setItem(`kt-v3/combat-manager/${this.name}Op`, value);
             return true;
         } catch(e) {
@@ -216,8 +235,8 @@ class KillOpManager extends OpManager {
         }
     }
     load = _ => {
-        const empty = { kills: this.scored, size: this.size };
-        try{            
+        const empty = { kills: this.scored, size: this.size, primary: this.primary, };
+        try{
             if (!localStorage) throw "Missing localStorage";
             const value = JSON.parse(localStorage.getItem(`kt-v3/combat-manager/${this.name}Op`));
             if (!value) return empty;
