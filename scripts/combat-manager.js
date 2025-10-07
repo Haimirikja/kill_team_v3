@@ -256,8 +256,9 @@ class KillOpManager extends OpManager {
         }
     }
     reset = _ => {
-        this.primary = false;
         this.scored = 0;
+        this.size = 0;
+        this.primary = false;
         this.sizeElement.value = null;
         if (localStorage) localStorage.removeItem(`kt-v3/combat-manager/${this.name}Op`);
         this.update(false);
