@@ -148,6 +148,7 @@ class OpManager {
         try{
             if (!localStorage) return 0;
             const value = JSON.parse(localStorage.getItem(`kt-v3/combat-manager/${this.name}Op`));
+            if (!value) return empty;
             const scored = parseInt(value.scored);
             const primary = typeof value.primary === 'boolean' ? value.primary : false;
             return { scored: scored, primary: primary, };
@@ -157,15 +158,13 @@ class OpManager {
         }
     }
     reset = _ => {
-        if (!localStorage) return false;
-        localStorage.removeItem(`kt-v3/combat-manager/${this.name}Op`);
         this.primary = false;
         this.scored = 0;
+        if (localStorage) localStorage.removeItem(`kt-v3/combat-manager/${this.name}Op`);
         this.update(false);
         return true;
     }
 }
-
 class KillOpManager extends OpManager {
     #killTable = {
         5: [1,2,3,4,5],
@@ -180,8 +179,13 @@ class KillOpManager extends OpManager {
         14: [3,6,8,11,14],
     };
     #size = 0;
+    #sizeElement = null;
     
-    constructor({ kills = 0, size = 0, primary = false } = {}) {
+    constructor({
+        kills = 0,
+        size = 0,
+        primary = false
+    } = {}) {
         super({
             scored: kills,
             name: "Kill",
@@ -191,18 +195,20 @@ class KillOpManager extends OpManager {
         this.scored = value.kills ?? this.scored;
         this.primary = value.primary ?? this.primary;
         this.size = size ? size : value.size;
-        const sizeElement = document.getElementById("KillTeamSize");
-        if (sizeElement) {
-            sizeElement.value = this.size;
-            sizeElement.addEventListener('change', e => { this.onChangeSize(e); });
+        this.sizeElement = document.getElementById("KillTeamSize");
+        if (this.sizeElement) {
+            this.sizeElement.value = this.size;
+            this.sizeElement.addEventListener('change', e => { this.onChangeSize(e); });
         }
         this.update(false);
     }
     get size() { return this.#size; }
+    get sizeElement() { return this.#sizeElement; }
     set size(value) {
         value = parseInt(value);
         this.#size = !isNaN(value) && isFinite(value) && value > 0 ? value : 0;
     }
+    set sizeElement(value) { this.#sizeElement = value instanceof HTMLElement ? value : null; }
 
     calculateVP = _ => {
         const ref = this.#killTable[this.size] ?? [];
@@ -248,6 +254,14 @@ class KillOpManager extends OpManager {
             console.error(e);
             return empty;
         }
+    }
+    reset = _ => {
+        this.primary = false;
+        this.scored = 0;
+        this.sizeElement.value = null;
+        if (localStorage) localStorage.removeItem(`kt-v3/combat-manager/${this.name}Op`);
+        this.update(false);
+        return true;
     }
 }
 class CritOpManager extends OpManager {
