@@ -286,6 +286,6 @@ class TacOpManager extends OpManager {
 
 window.onload = _ => {
     
-    const combatManager = new CombatManager();
+    const _ = new CombatManager();
 
 }

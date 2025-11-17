@@ -189,7 +189,7 @@ const TACOPS = [
         ],
         "missionAction": [
             {
-                "name": "",
+                "name": "Retrieve",
                 "cost": 1,
                 "effects": [
                     [
