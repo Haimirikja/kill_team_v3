@@ -101,7 +101,7 @@ class OpManager {
                     break;
             }
         } else this.primaryElement.remove();
-        this.scoredElement.innerText = this.scored;
+        this.scoredElement.textContent = this.scored;
         switch(this.vp) {
             case 1:
                 this.vpElement.src = "images/icons/d6-1.png";

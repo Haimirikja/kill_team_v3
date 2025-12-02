@@ -52,13 +52,13 @@ class CritOp {
         card.setAttribute("data-archtype", this.archetypeID);
         const header = document.createElement("header");
         const name = document.createElement("h1");
-        name.innerText = this.name.toUpperCase();
+        name.textContent = this.name.toUpperCase();
         header.appendChild(name);
         const description = document.createElement("div");
         if (this.missionAction.length) {
             const action = document.createElement("div");
             const title = document.createElement("h3");
-            title.innerText = "MISSION ACTION";
+            title.textContent = "MISSION ACTION";
             action.appendChild(title);
             this.missionAction.forEach(a => action.appendChild(a.toHTML()));
             description.appendChild(action);
@@ -66,11 +66,11 @@ class CritOp {
         if (this.additionalRules.length) {
             const rules = document.createElement("div");
             const title = document.createElement("h3");
-            title.innerText = "ADDITIONAL RULES";
+            title.textContent = "ADDITIONAL RULES";
             const text = document.createElement("div");
             this.additionalRules.forEach(row => {
                 const line = document.createElement("div");
-                line.innerText = row;
+                line.textContent = row;
                 text.appendChild(line);
             });
             rules.append(title, text);
@@ -79,11 +79,11 @@ class CritOp {
         if (this.victoryPoints.length) {
             const points = document.createElement("div");
             const title = document.createElement("h3");
-            title.innerText = "VICTORY POINTS";
+            title.textContent = "VICTORY POINTS";
             const text = document.createElement("div");
             this.victoryPoints.forEach(row => {
                 const line = document.createElement("div");
-                line.innerText = row.replace(/^\* /gi, "• ");
+                line.textContent = row.replace(/^\* /gi, "• ");
                 text.appendChild(line);
             });
             points.append(title, text);
@@ -150,9 +150,9 @@ class Action {
         const header = document.createElement("header");
         const name = document.createElement("div");
         name.classList.add("name");
-        name.innerText = this.name.toUpperCase();
+        name.textContent = this.name.toUpperCase();
         const cost = document.createElement("div");
-        cost.innerText = `${this.cost} AP`
+        cost.textContent = `${this.cost} AP`
         header.append(name, cost);
         const description = document.createElement("div");
         this.effects.forEach(effect => {
@@ -160,7 +160,7 @@ class Action {
             block.classList.add("effect");
             effect.forEach(row => {
                 const line = document.createElement("div");
-                line.innerText = row.replace(/^\* /gi, "• ");
+                line.textContent = row.replace(/^\* /gi, "• ");
                 block.appendChild(line);
             });
             description.appendChild(block);
@@ -170,7 +170,7 @@ class Action {
             block.classList.add("condition");
             condition.forEach(row => {
                 const line = document.createElement("div");
-                line.innerText = row.replace(/^\* /gi, "• ");
+                line.textContent = row.replace(/^\* /gi, "• ");
                 block.appendChild(line);
             });
             description.appendChild(block);
@@ -200,7 +200,7 @@ function createResetButton() {
     const resetButton = document.createElement("div");
     resetButton.id = "ResetButton";
     resetButton.classList.add("button");
-    resetButton.innerText = "Reset";
+    resetButton.textContent = "Reset";
     resetButton.addEventListener('click', _ => resetCritOp());
     document.getElementById("Actions").innerHTML = null;
     document.getElementById("Actions").appendChild(resetButton);
